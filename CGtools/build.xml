@@ -1,0 +1,115 @@
+<project name="Generic Webapp" default="tomcat_start" basedir=".">  
+    <!-- Load properties -->  
+    <property file="build.properties" />  
+  
+    <!-- Ensure that specified environment is valid -->  
+    <fileset dir="${JAVA_HOME}" />  
+    <fileset dir="${J2EE_HOME}" />  
+  
+  
+    <property name="webapp.name" value="${project_name}" />  
+    <property name="webapp.src" value="${basedir}/src" />  
+    <property name="webapp.webroot" value="${basedir}/WebContent" />  
+    <property name="webapp.dist" value="${basedir}/dist" />  
+    <property name="webapp.target" value="${basedir}/build" />  
+    <property name="webapp.war" value="${webapp.name}.war" />  
+    <property name="tomcat.lib" value="${tomcat_home}/lib" /> 
+  
+  
+    <path id="classpath">  
+        <fileset dir="${webapp.target}/WEB-INF/lib">  
+            <include name="**/*.jar" />  
+        </fileset>  
+        <!-- 3rd party Jars -->  
+        <fileset dir="${JAVA_HOME}">  
+            <include name="**/*.jar" />  
+        </fileset>  
+        <fileset dir="${J2EE_HOME}">  
+            <include name="**/*.jar" />  
+        </fileset>
+        <fileset dir="${webapp.target}/WEB-INF/lib">  
+            <include name="**/*.jar" />  
+        </fileset>
+        <fileset dir="${tomcat_home}/lib">  
+            <include name="**/*.jar" />  
+        </fileset>
+    </path>  
+  
+    <target name="copy" description="copy libs and webcontent" depends="clean_project">  
+        <echo message="copy files from ${webapp.webroot} to ${webapp.target} without *.class" />  
+        <mkdir dir="${webapp.target}/WEB-INF/lib" />  
+        <mkdir dir="${webapp.target}/WEB-INF/classes" />  
+        <copy todir="${webapp.target}" overwrite="yes">  
+            <fileset dir="${webapp.webroot}">  
+                <exclude name="**/*.class" />  
+            </fileset>  
+        </copy>  
+    </target>  
+  
+    <target name="compile" description="Compile Java sources" depends="copy">  
+        <echo message="compile src in ${webapp.src} to ${webapp.target}/WEB-INF/classes" />  
+        <javac srcdir="${webapp.src}"  
+               destdir="${webapp.target}/WEB-INF/classes"  
+               debug="${compile.debug}"  
+               encoding="${compile.encoding}"  
+               deprecation="${compile.deprecation}"  
+               optimize="${compile.optimize}">  
+            <classpath refid="classpath" />
+            <compilerarg line="-encoding UTF-8 "/>
+            <compilerarg value="-Xlint:unchecked"/> 
+        </javac>  
+    </target>  
+
+  
+    <target name="dist" depends="compile" description="Create web application archive">  
+        <echo message="Processing webapp ${webapp.name}" />  
+        <mkdir dir="${webapp.dist}" />  
+        <jar jarfile="${webapp.dist}/${webapp.war}" basedir="${webapp.target}" />  
+        <delete dir="${webapp.target}" />  
+    </target>  
+  
+  
+    <target name="clean_project" description="Clean build and distribution directories">  
+        <echo message="Clean build and distribution directories" />  
+        <echo message="Clean ${webapp.target}" />  
+        <delete dir="${webapp.target}" />  
+        <echo message="Clean ${webapp.dist}/${webapp.war}" />  
+        <delete file="${webapp.dist}/${webapp.war}" />  
+    </target>  
+  
+    <target name="clean_tomcat" depends="tomcat_stop" description="Clean tomcat webapp">  
+        <echo message="Clean tomcat webapp" />  
+        <delete file="${tomcat_home}/webapps/${webapp.war}" />  
+        <delete dir="${tomcat_home}/webapps/${webapp.name}" />  
+    </target>  
+  
+    <target name="deploy_tomcat" depends="clean_tomcat,dist" description="deploy to the server">  
+        <echo message="deploy to the server ${tomcat_home}/webapps/${webapp.war}" />  
+        <copy file="${webapp.dist}/${webapp.war}" tofile="${tomcat_home}/webapps/${webapp.war}" overwrite="yes" />  
+    </target>  
+  
+    <target name="tomcat_start" depends="deploy_tomcat" description="tomcat starting.....">  
+        <echo message="start tomcat" />  
+        <!--<java jar="${tomcat_home}/bin/bootstrap.jar" fork="true">  
+            <jvmarg value="-Dcatalina.home=${tomcat_home}" />  
+        </java>-->  
+        <exec dir="${tomcat_home}/bin" executable="cmd.exe" spawn="true" vmlauncher="false">  
+            <arg line="/c startup.bat" />  
+        </exec>  
+    </target>  
+  
+    <target name="tomcat_stop">  
+        <echo message="stopping tomcat ..." />  
+        <java jar="${tomcat_home}/bin/bootstrap.jar" fork="true">  
+            <jvmarg value="-Dcatalina.home=${tomcat_home}" />  
+            <arg line="stop" />  
+        </java>  
+        <!--<exec dir="${tomcat_home}/bin" executable="cmd.exe" spawn="true" vmlauncher="false">  
+                    <arg line="/c shutdown.bat" />  
+                </exec>-->  
+        <echo message="wait for 5 second" />  
+        <waitfor maxwait="5" maxwaitunit="second">  
+            <available file="errors.log" />  
+        </waitfor>  
+    </target>  
+</project>  
