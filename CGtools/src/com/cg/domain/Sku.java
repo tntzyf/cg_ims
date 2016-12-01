@@ -7,6 +7,7 @@ public class Sku implements Comparable,Cloneable{
 	private boolean sale;
 	private boolean hasstock;
 	private Float publishPrice;
+	private String cgid;
 	public String getTitle() {
 		return title;
 	}
@@ -66,6 +67,12 @@ public class Sku implements Comparable,Cloneable{
 	}
 	public void setPublishPrice(Float publishPrice) {
 		this.publishPrice = publishPrice;
+	}
+	public String getCgid() {
+		return cgid;
+	}
+	public void setCgid(String cgid) {
+		this.cgid = cgid;
 	}
 	
 	

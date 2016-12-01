@@ -133,6 +133,7 @@ public class PriceCaculatorService {
 			sku.setSale(jdsku.getImportant());
 			sku.setTitle(jdsku.getName());
 			sku.setHasstock(jdsku.getInstock());
+			sku.setCgid(jdsku.getCgId());
 			sku.setPublishPrice(jdsku.getPublishingPrice());
 			newSku.add(sku);
 			inventoryData.put(sku.getJdid(), jdsku.getBuynumber());
