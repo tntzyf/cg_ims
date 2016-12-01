@@ -121,6 +121,7 @@ if(result!=null && !result.isEmpty()){
 					<tr>
 						<th><input type="checkbox" id="checkALL"/></th>
 						<th>总价</th>
+						<th>成交价</th>
 						<th>商品</th>
 					</tr>
 					<%
@@ -156,6 +157,11 @@ if(result!=null && !result.isEmpty()){
 							<%=item.getTotalPrice() %>
 						</td>
 						<td>
+							<%if(couponCondition!=null && couponDiscount!=null) {%>
+								<%=item.getTotalPrice()-couponDiscount %>
+							<%} %>
+						</td>
+						<td>
 							<%Map<Sku,Integer> map = item.getSkus(); 
 							Set<Map.Entry<Sku,Integer>> skus = map.entrySet();
 							List<Map.Entry<Sku,Integer>> listSkus = new ArrayList<Map.Entry<Sku,Integer>>();
@@ -171,9 +177,10 @@ if(result!=null && !result.isEmpty()){
 									<%if(entry.getKey().isSale()){%></font><%} %>
 									 : <font color="red"><%=entry.getValue() %>个</font> * <%=entry.getKey().getPrice() %>
 									 <%if(couponCondition!=null && couponDiscount!=null) {%>
-									 	(<%=PriceTool.round((item.getTotalPrice()-couponDiscount)/item.getTotalPrice()*entry.getKey().getPrice())%>, <%if(entry.getKey().getPublishPrice()!=null){ %>厂价:<%=entry.getKey().getPublishPrice() %>,<%=PriceTool.round((item.getTotalPrice()-couponDiscount)/item.getTotalPrice()*entry.getKey().getPrice()/entry.getKey().getPublishPrice())%>折<%} %>)
+									 	(<%=PriceTool.round((item.getTotalPrice()-couponDiscount)/item.getTotalPrice()*entry.getKey().getPrice())%>, <%if(entry.getKey().getPublishPrice()!=null){ %>厂价:<%=entry.getKey().getPublishPrice() %>,
+									 	<%=PriceTool.round((item.getTotalPrice()-couponDiscount)/item.getTotalPrice()*entry.getKey().getPrice()/entry.getKey().getPublishPrice())%>折<%} %>)
 									 <%} %>
-									 &nbsp;<a target="_blank" href="http://click.union.jd.com/JdClick/?unionId=11406&t=4&to=http://www.jd.com/product/<%=entry.getKey().getJdid()%>.html"><%=entry.getKey().getJdid() %></a>
+									 &nbsp;京东ID<a target="_blank" href="http://click.union.jd.com/JdClick/?unionId=11406&t=4&to=http://www.jd.com/product/<%=entry.getKey().getJdid()%>.html"><%=entry.getKey().getJdid() %></a> 美萍Id <%=entry.getKey().getCgid() %>
 									 <br/>
 							<%
 								}

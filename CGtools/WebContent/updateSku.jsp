@@ -20,7 +20,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td>cg id</td>
+		<td>美萍id</td>
 		<td><input type="text" name="cgId" value="${sku.cgId}"/></td>
 	</tr>
 	<tr>

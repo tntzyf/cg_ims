@@ -73,8 +73,8 @@ function redirect(){
 								<table border="1">
 									<tr>
 										<td>
-											jdId:<input type="text" name="skuId" value="${query_skuId}"/> &nbsp; 
-											cgId:<input type="text" name="cgId" value="${query_cgId}"/> &nbsp;
+											京东Id:<input type="text" name="skuId" value="${query_skuId}"/> &nbsp; 
+											美萍Id:<input type="text" name="cgId" value="${query_cgId}"/> &nbsp;
 											name:<input type="text" name="name" value="${query_name}"/> &nbsp;
 											条形码:<input type="text" name="barcode" value="${query_barcode}"/> &nbsp;
 											类型:<select name="type">
@@ -226,8 +226,8 @@ function redirect(){
 	<c:if test="${resultMap!=null}">
 		<table border="1">
 			<tr>
-				<td>jdId</td>
-				<td>cgId</td>
+				<td>京东Id<br></br><a href="<%=request.getContextPath()%>/JDSkuManageAction?action=query&sortName=sku_id&sort=1">(高-低)</a>&nbsp;<a href="<%=request.getContextPath()%>/JDSkuManageAction?action=query&sortName=sku_id&sort=0">(低-高)</a></td>
+				<td>美萍Id<br></br><a href="<%=request.getContextPath()%>/JDSkuManageAction?action=query&sortName=cgId&sort=1">(高-低)</a>&nbsp;<a href="<%=request.getContextPath()%>/JDSkuManageAction?action=query&sortName=cgId&sort=0">(低-高)</a></td>
 				<td>name</td>
 				<td>条形码</td>
 				<td>类型</td>
